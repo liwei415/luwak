@@ -1,6 +1,5 @@
 /*
  * Copyright (C) Liwei
- * Copyright (C) Roadoor, Inc.
  */
 
 
