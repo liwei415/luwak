@@ -13,7 +13,7 @@ typedef struct lwk_consumers_s lwk_consumers_t;
 
 struct lwk_consumer_s {
   char *name;
-  char *type;
+  int type;
   char *server;
   int port;
   char *key;
