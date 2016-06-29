@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Consumers>
+  <Log>7</Log>
   <Consumer>
     <Name>test_aaaa</Name>
     <Type>redis</Type>
