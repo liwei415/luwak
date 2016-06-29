@@ -1,10 +1,5 @@
-/*
- * Copyright (C) Liwei
- */
-
-
-#ifndef _LWK_REDIS_H_
-#define _LWK_REDIS_H_
+#ifndef _LWK_REDIS_
+#define _LWK_REDIS_
 
 #include <stdio.h>
 #include <string.h>

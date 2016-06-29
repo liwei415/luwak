@@ -1,8 +1,3 @@
-/*
- * Copyright (C) Liwei
- */
-
-
 #include "lwk_redis.h"
 
 int lwk_redis_llen(char *server, int port, char *key)

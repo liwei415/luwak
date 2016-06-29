@@ -11,11 +11,11 @@ all: objs/luwak
 #########
 objs/luwak: objs/luwak.o \
 		objs/lwk_redis.o \
-		objs/lwk_conf.o
+		objs/lwk_xml.o
 
 	$(CC) -o objs/luwak \
 		objs/luwak.o \
-		objs/lwk_conf.o \
+		objs/lwk_xml.o \
 		objs/lwk_redis.o \
 		$(LIBS)
 
@@ -29,17 +29,17 @@ objs/luwak.o: src/luwak.c
 		-o objs/luwak.o \
 		src/luwak.c
 
-objs/lwk_conf.o: src/lwk_conf.c
+objs/lwk_xml.o: src/lwk_xml.c
 
 	$(CC) -c $(CFLAGS) $(INCLUDES) \
-		-o objs/lwk_conf.o \
-		src/lwk_conf.c
+		-o objs/lwk_xml.o \
+		src/lwk_xml.c
 
-objs/lwk_redis.o: src/redis/lwk_redis.c
+objs/lwk_redis.o: src/lwk_redis.c
 
 	$(CC) -c $(CFLAGS) $(INCLUDES) \
 		-o objs/lwk_redis.o \
-		src/redis/lwk_redis.c
+		src/lwk_redis.c
 
 #########
 #  clean #

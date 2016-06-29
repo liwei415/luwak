@@ -1,15 +1,10 @@
-/*
- * Copyright (C) liwei
- */
+#ifndef _LUWAK_
+#define _LUWAK_
 
 
-#ifndef _LWK_CORE_
-#define _LWK_CORE_
-
-
-#include "lwk_config.h"
-#include "lwk_conf.h"
-#include "redis/lwk_redis.h"
+#include "lwk_common.h"
+#include "lwk_xml.h"
+#include "lwk_redis.h"
 
 #define U_SLEEP_TIME 1000000
 #define SLEEP_TIME 1

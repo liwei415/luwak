@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Consumers>
   <Consumer>
+    <Name>test_aaaa</Name>
+    <Type>redis</Type>
     <Server>192.168.1.99</Server>
     <Port>6379</Port>
     <Key>test:aaaa</Key>
@@ -8,6 +10,8 @@
     <Enabled>1</Enabled>
   </Consumer>
   <Consumer>
+    <Name>test_bbbb</Name>
+    <Type>rabbitmq</Type>
     <Server>192.168.1.99</Server>
     <Port>6379</Port>
     <Key>test:bbbb</Key>

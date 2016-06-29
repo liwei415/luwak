@@ -1,9 +1,4 @@
-/*
- * Copyright (C) Liwei
- */
-
-
-#include "lwk_conf.h"
+#include "lwk_xml.h"
 
 lwk_consumers_t *lwk_conf_load_consumers(char *conf)
 {

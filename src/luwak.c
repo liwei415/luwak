@@ -1,8 +1,3 @@
-/*
- * Copyright (C) Liwei
- */
-
-
 #include "luwak.h"
 
 int _run(lwk_consumer_t *consumer)

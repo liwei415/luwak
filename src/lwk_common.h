@@ -1,10 +1,5 @@
-/*
- * Copyright (C) Liwei
- */
-
-
-#ifndef _LWK_CONFIG_
-#define _LWK_CONFIG_
+#ifndef _LWK_COMMON_
+#define _LWK_COMMON_
 
 #include <stdio.h>
 #include <string.h>
@@ -17,6 +12,8 @@ typedef struct lwk_consumer_s lwk_consumer_t;
 typedef struct lwk_consumers_s lwk_consumers_t;
 
 struct lwk_consumer_s {
+  char *name;
+  char *type;
   char *server;
   int port;
   char *key;
