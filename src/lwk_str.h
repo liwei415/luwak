@@ -1,5 +1,5 @@
-#ifndef _LWK_STRING_
-#define _LWK_STRING_
+#ifndef _LWK_STR_
+#define _LWK_STR_
 
 #include <stdlib.h>
 #include <string.h>

@@ -6,24 +6,83 @@
 #include <unistd.h>
 #include <hiredis/hiredis.h>
 
+#include "lwk_log.h"
 
-/* last_do用于判断是否应该进行心跳 */
-typedef struct lwk_consumer_s lwk_consumer_t;
-typedef struct lwk_consumers_s lwk_consumers_t;
+#ifndef LWK_VERSION
+#define LWK_VERSION "1.0.0"
+#endif
 
-struct lwk_consumer_s {
-  char *name;
-  int type;
-  char *server;
+#define U_SLEEP_TIME 1000000
+#define SLEEP_TIME 1
+
+typedef struct lwk_redis_consumer_s lwk_redis_consumer_t;
+typedef struct lwk_redis_consumers_s lwk_redis_consumers_t;
+
+struct lwk_redis_consumer_s {
+  char server[128];
   int port;
-  char *key;
-  char *command;
+  char key[128];
+  char command[512];
   int enabled;
 };
 
-struct lwk_consumers_s {
+struct lwk_redis_consumers_s {
   int size;
-  lwk_consumer_t *consumer;
+  lwk_redis_consumer_t *consumer;
 };
+
+typedef struct lwk_rabbit_consumer_s lwk_rabbit_consumer_t;
+typedef struct lwk_rabbit_consumers_s lwk_rabbit_consumers_t;
+
+struct lwk_rabbit_consumer_s {
+  char server[128];
+  int port;
+  char key[128];
+  char command[512];
+  int enabled;
+};
+
+struct lwk_rabbit_consumers_s {
+  int size;
+  lwk_rabbit_consumer_t *consumer;
+};
+
+typedef struct lwk_vars_s lwk_vars_t;
+struct lwk_vars_s {
+  int is_daemon;
+  int log_level;
+  char log_path[512];
+};
+
+extern lwk_vars_t vars;
+
+#define LOG_FATAL       0           /* System is unusable */
+#define LOG_ALERT       1           /* Action must be taken immediately */
+#define LOG_CRIT        2           /* Critical conditions */
+#define LOG_ERROR       3           /* Error conditions */
+#define LOG_WARNING     4           /* Warning conditions */
+#define LOG_NOTICE      5           /* Normal, but significant */
+#define LOG_INFO        6           /* Information */
+#define LOG_DEBUG       7           /* DEBUG message */
+
+#ifdef DEBUG
+#define LOG_PRINT(level, fmt, ...)                      \
+  do {                                                  \
+    int log_id = mnl_log_open(vars.log_path, "a");      \
+    mnl_log_printf0(log_id, level, "%s:%d %s() "fmt,    \
+                   __FILE__, __LINE__, __FUNCTION__,    \
+                   ##__VA_ARGS__);                      \
+    mnl_log_close(log_id);                              \
+  } while (0)
+#else
+#define LOG_PRINT(level, fmt, ...)                          \
+  do {                                                      \
+    if (level <= vars.log_level) {                          \
+      int log_id = mnl_log_open(vars.log_path, "a");        \
+      mnl_log_printf0(log_id, level, fmt, ##__VA_ARGS__) ;  \
+      mnl_log_close(log_id);                                \
+    }                                                       \
+  } while (0)
+#endif
 
 #endif

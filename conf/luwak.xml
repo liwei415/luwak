@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Consumers>
   <Log>7</Log>
-  <Consumer>
-    <Name>test_aaaa</Name>
-    <Type>redis</Type>
-    <Server>192.168.1.99</Server>
-    <Port>6379</Port>
-    <Key>test:aaaa</Key>
-    <Command>/bin/php -f /webdata/luwak/objs/test_aaaa.php</Command>
-    <Enabled>1</Enabled>
-  </Consumer>
-  <Consumer>
-    <Name>test_bbbb</Name>
-    <Type>rabbitmq</Type>
-    <Server>192.168.1.99</Server>
-    <Port>6379</Port>
-    <Key>test:bbbb</Key>
-    <Command>/bin/php -f /webdata/luwak/objs/test_bbbb.php</Command>
-    <Enabled>1</Enabled>
-  </Consumer>
+  <LogPath>lwk.log</LogPath>
 </Consumers>

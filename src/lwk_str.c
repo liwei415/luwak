@@ -1,6 +1,6 @@
-#include "lwk_string.h"
+#include "lwk_str.h"
 
-size_t ox_strlcpy(char *dst, const char *src, size_t size) {
+size_t lwk_strlcpy(char *dst, const char *src, size_t size) {
   size_t srclen;
   // Figure out how much room is needed...
   size --;

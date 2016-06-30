@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Consumers>
+  <Consumer>
+    <Server>127.0.0.1</Server>
+    <Port>6379</Port>
+    <Key>test:aaaa</Key>
+    <Command>/bin/php -f /home/d/my_project/luwak/objs/redis_a.php</Command>
+    <Enabled>1</Enabled>
+  </Consumer>
+  <Consumer>
+    <Server>127.0.0.1</Server>
+    <Port>6379</Port>
+    <Key>test:bbbb</Key>
+    <Command>/bin/php -f /home/d/my_project/luwak/objs/redis_b.php</Command>
+    <Enabled>1</Enabled>
+  </Consumer>
+</Consumers>

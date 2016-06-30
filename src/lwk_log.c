@@ -17,9 +17,9 @@ static struct log_level_desc log_level_descs[] = {
 };
 
 static FILE* log_files[MAX_LOGS+1];
-static ox_slock_t log_locks[MAX_LOGS+1];
+static lwk_slock_t log_locks[MAX_LOGS+1];
 
-static int ox_log_valid(int log_id);
+static int lwk_log_valid(int log_id);
 
 /**
  * @brief log_valid check log is valid
@@ -28,7 +28,7 @@ static int ox_log_valid(int log_id);
  *
  * @return 1 for OK and 0 for fail
  */
-static int ox_log_valid(int log_id)
+static int lwk_log_valid(int log_id)
 {
   if (log_id < 0 || log_id > MAX_LOGS) {
     return 0;
@@ -39,12 +39,12 @@ static int ox_log_valid(int log_id)
 /**
  * @brief log_init init log
  */
-void ox_log_init(void)
+void lwk_log_init(void)
 {
   int i;
   for (i = 0; i < MAX_LOGS+1; i++) {
     log_files[i] = NULL;
-    ox_slock_init(&log_locks[i], NULL);
+    lwk_slock_init(&log_locks[i], NULL);
   }
 }
 
@@ -56,19 +56,19 @@ void ox_log_init(void)
  *
  * @return log open id for OK and -1 for fail
  */
-int ox_log_open(const char *path, const char* mode)
+int lwk_log_open(const char *path, const char* mode)
 {
   int i;
   for (i = LOG_USER; i < MAX_LOGS+1; i++) {
-    ox_slock_lock(&log_locks[i]);
+    lwk_slock_lock(&log_locks[i]);
     if (log_files[i] == NULL) {
       log_files[i] = fopen(path, mode);
       if (log_files[i]) {
-        ox_slock_unlock(&log_locks[i]);
+        lwk_slock_unlock(&log_locks[i]);
         return i;
       }
     }
-    ox_slock_unlock(&log_locks[i]);
+    lwk_slock_unlock(&log_locks[i]);
   }
   return LOG_INVALID;
 }
@@ -79,7 +79,7 @@ int ox_log_open(const char *path, const char* mode)
  * We actually use this only for signals that are not fatal from the point
  * of view of Redis. Signals that are going to kill the server anyway and
  * where we need printf-alike features are served by redisLog(). */
-void ox_log_handler(const char *msg)
+void lwk_log_handler(const char *msg)
 {
   int fd;
   int log_to_stdout = vars.log_level == -1;
@@ -111,7 +111,7 @@ void ox_log_handler(const char *msg)
  * @param fmt format of string
  * @param ... other args
  */
-void ox_log_printf0(int log_id, int log_level, const char *fmt, ...)
+void lwk_log_printf0(int log_id, int log_level, const char *fmt, ...)
 {
   FILE *fp;
   time_t t;
@@ -120,13 +120,13 @@ void ox_log_printf0(int log_id, int log_level, const char *fmt, ...)
   va_list args;
   int level;
 
-  if (!ox_log_valid(log_id)) {
+  if (!lwk_log_valid(log_id)) {
     fp = stdout;
   }
   else {
-    ox_slock_lock(&log_locks[log_id]);
+    lwk_slock_lock(&log_locks[log_id]);
     if (!(fp = log_files[log_id])) {
-      ox_slock_unlock(&log_locks[log_id]);
+      lwk_slock_unlock(&log_locks[log_id]);
       return;
     }
   }
@@ -164,9 +164,9 @@ void ox_log_printf0(int log_id, int log_level, const char *fmt, ...)
   }
 
 
-  if (ox_log_valid(log_id)) {
+  if (lwk_log_valid(log_id)) {
     fflush(fp);
-    ox_slock_unlock(&log_locks[log_id]);
+    lwk_slock_unlock(&log_locks[log_id]);
   }
 }
 
@@ -175,19 +175,19 @@ void ox_log_printf0(int log_id, int log_level, const char *fmt, ...)
  *
  * @param log_id log id
  */
-void ox_log_flush(int log_id)
+void lwk_log_flush(int log_id)
 {
-  if (!ox_log_valid(log_id)) {
+  if (!lwk_log_valid(log_id)) {
     return;
   }
 
-  ox_slock_lock(&log_locks[log_id]);
+  lwk_slock_lock(&log_locks[log_id]);
 
   if (log_files[log_id]) {
     fflush(log_files[log_id]);
   }
 
-  ox_slock_unlock(&log_locks[log_id]);
+  lwk_slock_unlock(&log_locks[log_id]);
 }
 
 /**
@@ -195,18 +195,18 @@ void ox_log_flush(int log_id)
  *
  * @param log_id the log id
  */
-void ox_log_close(int log_id)
+void lwk_log_close(int log_id)
 {
-  if (!ox_log_valid(log_id)) {
+  if (!lwk_log_valid(log_id)) {
     return;
   }
 
-  ox_slock_lock(&log_locks[log_id]);
+  lwk_slock_lock(&log_locks[log_id]);
 
   if (log_files[log_id]) {
     fclose(log_files[log_id]);
     log_files[log_id] = NULL;
   }
 
-  ox_slock_unlock(&log_locks[log_id]);
+  lwk_slock_unlock(&log_locks[log_id]);
 }
