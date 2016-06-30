@@ -68,19 +68,19 @@ extern lwk_vars_t vars;
 #ifdef DEBUG
 #define LOG_PRINT(level, fmt, ...)                      \
   do {                                                  \
-    int log_id = mnl_log_open(vars.log_path, "a");      \
-    mnl_log_printf0(log_id, level, "%s:%d %s() "fmt,    \
+    int log_id = lwk_log_open(vars.log_path, "a");      \
+    lwk_log_printf0(log_id, level, "%s:%d %s() "fmt,    \
                    __FILE__, __LINE__, __FUNCTION__,    \
                    ##__VA_ARGS__);                      \
-    mnl_log_close(log_id);                              \
+    lwk_log_close(log_id);                              \
   } while (0)
 #else
 #define LOG_PRINT(level, fmt, ...)                          \
   do {                                                      \
     if (level <= vars.log_level) {                          \
-      int log_id = mnl_log_open(vars.log_path, "a");        \
-      mnl_log_printf0(log_id, level, fmt, ##__VA_ARGS__) ;  \
-      mnl_log_close(log_id);                                \
+      int log_id = lwk_log_open(vars.log_path, "a");        \
+      lwk_log_printf0(log_id, level, fmt, ##__VA_ARGS__) ;  \
+      lwk_log_close(log_id);                                \
     }                                                       \
   } while (0)
 #endif

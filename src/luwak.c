@@ -9,16 +9,6 @@ static void vars_init(void)
   lwk_strlcpy(vars.log_path, "lwk.log", sizeof(vars.log_path));
 }
 
-/* int _run(lwk_consumer_t *consumer) */
-/* { */
-/*   while(1) { */
-/*     if (lwk_redis_llen(consumer->server, consumer->port, consumer->key) > 0) { */
-/*       system(consumer->command); */
-/*     } */
-/*     usleep(U_SLEEP_TIME); */
-/*   } */
-/* } */
-
 void *_t_redis(void *t_redis)
 {
   //Detach thread
@@ -42,9 +32,19 @@ void *_t_redis(void *t_redis)
 
   free(t_redis);t_redis = NULL; //Deallocate memory for argument
 
-  while (1) {
-    printf("num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n", num, server, port, key, command, enabled);
-    sleep(1);
+  LOG_PRINT(LOG_DEBUG, "REDIS ready to work...num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n",
+            num,
+            server,
+            port,
+            key,
+            command,
+            enabled);
+
+  while(1) {
+    if (lwk_redis_llen(server, port, key) > 0) {
+      system(command);
+    }
+    usleep(U_SLEEP_TIME);
   }
 
   pthread_exit(0);
@@ -73,6 +73,14 @@ void *_t_rabbit(void *t_rabbit)
 
   free(t_rabbit);t_rabbit = NULL; //Deallocate memory for argument
 
+  LOG_PRINT(LOG_DEBUG, "RABBIT ready to work...num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n",
+            num,
+            server,
+            port,
+            key,
+            command,
+            enabled);
+
   while (1) {
     printf("num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n", num, server, port, key, command, enabled);
     sleep(1);
@@ -100,7 +108,7 @@ int main()
   for (i = 0; i < redis_consumers->size; i++) {
     t_redis_t *t_redis = (t_redis_t *)calloc(1, sizeof(t_redis_t));
     if (t_redis == NULL) {
-      perror("create thread failed");
+      LOG_PRINT(LOG_DEBUG, "create thread failed...");
     }
     else {
       t_redis->num = i;
@@ -113,7 +121,7 @@ int main()
       pthread_t tid;
       int error = pthread_create(&tid, NULL, _t_redis, t_redis);
       if (error != 0) {
-        perror("Couldn't run thread, errno\n");
+        LOG_PRINT(LOG_DEBUG, "Couldn't run thread");
       }
     }
   }
@@ -122,7 +130,7 @@ int main()
   for (i = 0; i < rabbit_consumers->size; i++) {
     t_rabbit_t *t_rabbit = (t_rabbit_t *)calloc(1, sizeof(t_rabbit_t));
     if (t_rabbit == NULL) {
-      perror("create thread failed");
+      LOG_PRINT(LOG_DEBUG, "create thread failed...");
     }
     else {
       t_rabbit->num = i;
@@ -135,24 +143,13 @@ int main()
       pthread_t tid;
       int error = pthread_create(&tid, NULL, _t_rabbit, t_rabbit);
       if (error != 0) {
-        perror("Couldn't run thread, errno\n");
+        LOG_PRINT(LOG_DEBUG, "Couldn't run thread");
       }
     }
   }
 
   // 主线程定时检查，有问题重启线程
   _monitor();
-
-  /* pid_t pids[consumers->size]; */
-
-  /* int i; */
-  /* for (i = 0; i < consumers->size; i++) { */
-  /*   pids[i] = fork(); */
-  /*   if(pids[i] == 0) { */
-  /*     _run(consumers->consumer+i); */
-  /*   } */
-  /*   usleep(U_SLEEP_TIME); */
-  /* } */
 
   return 0;
 }
