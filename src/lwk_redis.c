@@ -6,11 +6,11 @@ int lwk_redis_llen(char *server, int port, char *key)
   redisContext *c = redisConnect(server, port);
   if (c == NULL || c->err) {
     if (c) {
-      printf("Connection error: %s\n", c->errstr);
+      LOG_PRINT(LOG_DEBUG, "Connection error: %s\n", c->errstr);
       redisFree(c);
     }
     else {
-      printf("Connection error: can't allocate redis context\n");
+      LOG_PRINT(LOG_DEBUG, "Connection error: can't allocate redis context\n");
     }
     return -1;
   }

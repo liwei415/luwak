@@ -12,6 +12,7 @@
 #include "lwk_common.h"
 #include "lwk_xml.h"
 #include "lwk_str.h"
+#include "lwk_rabbit.h"
 #include "lwk_redis.h"
 
 #define U_SLEEP_TIME 1000000
@@ -34,8 +35,11 @@ struct t_rabbit_s
   int num;
   char server[128];
   int port;
-  char key[128];
+  char queue[128];
   char command[512];
+  int passive;
+  int durable;
+  int auto_delete;
   int enabled;
 };
 

@@ -120,11 +120,20 @@ lwk_rabbit_consumers_t *lwk_xml_load_rabbit(char *conf)
         else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Port"))) {
           (consumers->consumer+i)->port = atoi((char *)key);
         }
-        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Key"))) {
-          lwk_strlcpy((consumers->consumer+i)->key, (char *)key, 128);
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Queue"))) {
+          lwk_strlcpy((consumers->consumer+i)->queue, (char *)key, 128);
         }
         else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Command"))) {
           lwk_strlcpy((consumers->consumer+i)->command, (char *)key, 512);
+        }
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Passive"))) {
+          (consumers->consumer+i)->passive = atoi((char *)key);
+        }
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Durable"))) {
+          (consumers->consumer+i)->durable = atoi((char *)key);
+        }
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"AutoDelete"))) {
+          (consumers->consumer+i)->auto_delete = atoi((char *)key);
         }
         else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Enabled"))) {
           (consumers->consumer+i)->enabled = atoi((char *)key);

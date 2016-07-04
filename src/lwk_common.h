@@ -37,8 +37,11 @@ typedef struct lwk_rabbit_consumers_s lwk_rabbit_consumers_t;
 struct lwk_rabbit_consumer_s {
   char server[128];
   int port;
-  char key[128];
+  char queue[128];
   char command[512];
+  int passive;
+  int durable;
+  int auto_delete;
   int enabled;
 };
 

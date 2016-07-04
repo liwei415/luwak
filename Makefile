@@ -1,9 +1,9 @@
 #########define
 CC = gcc
-#CFLAGS = -Wall -g -O2
-CFLAGS = -Wall
+CFLAGS = -Wall -g -O2
+#CFLAGS = -Wall
 INCLUDES = -I/usr/include/libxml2
-LIBS = -lxml2 -lhiredis -lpthread
+LIBS = -lxml2 -lhiredis  -lrabbitmq -lpthread
 
 all: objs/luwak
 .PHONY: all
@@ -14,6 +14,7 @@ objs/luwak: objs/luwak.o \
 		objs/lwk_log.o \
 		objs/lwk_slock.o \
 		objs/lwk_str.o \
+		objs/lwk_rabbit.o \
 		objs/lwk_redis.o \
 
 	$(CC) -o objs/luwak \
@@ -22,6 +23,7 @@ objs/luwak: objs/luwak.o \
 		objs/lwk_log.o \
 		objs/lwk_slock.o \
 		objs/lwk_str.o \
+		objs/lwk_rabbit.o \
 		objs/lwk_redis.o \
 		$(LIBS)
 
@@ -59,6 +61,12 @@ objs/lwk_str.o: src/lwk_str.c
 		-o objs/lwk_str.o \
 		src/lwk_str.c
 
+objs/lwk_rabbit.o: src/lwk_rabbit.c
+
+	$(CC) -c $(CFLAGS) $(INCLUDES) \
+		-o objs/lwk_rabbit.o \
+		src/lwk_rabbit.c
+
 objs/lwk_redis.o: src/lwk_redis.c
 
 	$(CC) -c $(CFLAGS) $(INCLUDES) \
@@ -72,4 +80,5 @@ clean:
 	rm -f luwak
 	rm -f luwak.xml
 	rm -f objs/luwak
+	rm -f objs/lwk.log
 	rm -f objs/*.o

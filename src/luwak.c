@@ -28,17 +28,9 @@ void *_t_redis(void *t_redis)
   char command[512];
   lwk_strlcpy(command, ((t_redis_t *)t_redis)->command, 512);
 
-  int enabled = ((t_redis_t *)t_redis)->enabled;
-
   free(t_redis);t_redis = NULL; //Deallocate memory for argument
 
-  LOG_PRINT(LOG_DEBUG, "REDIS ready to work...num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n",
-            num,
-            server,
-            port,
-            key,
-            command,
-            enabled);
+  LOG_PRINT(LOG_DEBUG, "REDIS ready to work...num:%d", num);
 
   while(1) {
     if (lwk_redis_llen(server, port, key) > 0) {
@@ -63,27 +55,29 @@ void *_t_rabbit(void *t_rabbit)
 
   int port = ((t_rabbit_t *)t_rabbit)->port;
 
-  char key[128];
-  lwk_strlcpy(key, ((t_rabbit_t *)t_rabbit)->key, 128);
+  char queue[128];
+  lwk_strlcpy(queue, ((t_rabbit_t *)t_rabbit)->queue, 128);
 
   char command[512];
   lwk_strlcpy(command, ((t_rabbit_t *)t_rabbit)->command, 512);
 
-  int enabled = ((t_rabbit_t *)t_rabbit)->enabled;
+  int passive = ((t_rabbit_t *)t_rabbit)->passive;
+
+  int durable = ((t_rabbit_t *)t_rabbit)->durable;
+
+  int auto_delete = ((t_rabbit_t *)t_rabbit)->auto_delete;
 
   free(t_rabbit);t_rabbit = NULL; //Deallocate memory for argument
 
-  LOG_PRINT(LOG_DEBUG, "RABBIT ready to work...num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n",
-            num,
-            server,
-            port,
-            key,
-            command,
-            enabled);
+  LOG_PRINT(LOG_DEBUG, "RABBIT ready to work...num:%d", num);
 
-  while (1) {
-    printf("num:%d, server:%s, port:%d, key:%s, command:%s, enabled:%d\n", num, server, port, key, command, enabled);
-    sleep(1);
+  while(1) {
+    if (lwk_rabbit_llen(server, port, queue, passive, durable, auto_delete) > 0) {
+      LOG_PRINT(LOG_DEBUG, "!!!!!!!!!!RABBIT :%d\n",
+                lwk_rabbit_llen(server, port, queue, passive, durable, auto_delete));
+      system(command);
+    }
+    usleep(U_SLEEP_TIME);
   }
 
   pthread_exit(0);
@@ -106,6 +100,10 @@ int main()
 
   // redis
   for (i = 0; i < redis_consumers->size; i++) {
+    if ((redis_consumers->consumer+i)->enabled == 0) {
+      continue;
+    }
+
     t_redis_t *t_redis = (t_redis_t *)calloc(1, sizeof(t_redis_t));
     if (t_redis == NULL) {
       LOG_PRINT(LOG_DEBUG, "create thread failed...");
@@ -128,6 +126,10 @@ int main()
 
   // rabbit
   for (i = 0; i < rabbit_consumers->size; i++) {
+    if ((rabbit_consumers->consumer+i)->enabled == 0) {
+      continue;
+    }
+
     t_rabbit_t *t_rabbit = (t_rabbit_t *)calloc(1, sizeof(t_rabbit_t));
     if (t_rabbit == NULL) {
       LOG_PRINT(LOG_DEBUG, "create thread failed...");
@@ -136,8 +138,11 @@ int main()
       t_rabbit->num = i;
       lwk_strlcpy(t_rabbit->server, (rabbit_consumers->consumer+i)->server, 128);
       t_rabbit->port = (rabbit_consumers->consumer+i)->port;
-      lwk_strlcpy(t_rabbit->key, (rabbit_consumers->consumer+i)->key, 128);
+      lwk_strlcpy(t_rabbit->queue, (rabbit_consumers->consumer+i)->queue, 128);
       lwk_strlcpy(t_rabbit->command, (rabbit_consumers->consumer+i)->command, 512);
+      t_rabbit->passive = (rabbit_consumers->consumer+i)->passive;
+      t_rabbit->durable = (rabbit_consumers->consumer+i)->durable;
+      t_rabbit->auto_delete = (rabbit_consumers->consumer+i)->auto_delete;
       t_rabbit->enabled = (rabbit_consumers->consumer+i)->enabled;
 
       pthread_t tid;
