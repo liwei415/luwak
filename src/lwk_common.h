@@ -9,11 +9,18 @@
 #include "lwk_log.h"
 
 #ifndef LWK_VERSION
-#define LWK_VERSION "1.0.0"
+#define LWK_VERSION "2.0.1"
 #endif
 
 #define U_SLEEP_TIME 1000000
 #define SLEEP_TIME 1
+
+typedef struct lwk_xml_s lwk_xml_t;
+struct lwk_xml_s {
+  int is_daemon;
+  int log_level;
+  char log_path[512];
+};
 
 typedef struct lwk_redis_consumer_s lwk_redis_consumer_t;
 typedef struct lwk_redis_consumers_s lwk_redis_consumers_t;
@@ -41,7 +48,9 @@ struct lwk_rabbit_consumer_s {
   char command[512];
   int passive;
   int durable;
+  int exclusive;
   int auto_delete;
+  int threads;
   int enabled;
 };
 
@@ -52,9 +61,11 @@ struct lwk_rabbit_consumers_s {
 
 typedef struct lwk_vars_s lwk_vars_t;
 struct lwk_vars_s {
+  char version[32];
   int is_daemon;
   int log_level;
   char log_path[512];
+
 };
 
 extern lwk_vars_t vars;

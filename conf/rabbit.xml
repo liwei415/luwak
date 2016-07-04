@@ -7,7 +7,9 @@
     <Command>/bin/php -f /home/d/test/php/receive.php</Command>
     <Passive>0</Passive>
     <Durable>1</Durable>
+    <Exclusive>0</Exclusive>
     <AutoDelete>1</AutoDelete>
+    <Threads>5</Threads>
     <Enabled>1</Enabled>
   </Consumer>
   <Consumer>
@@ -17,7 +19,9 @@
     <Command>/bin/php -f /home/d/my_project/luwak/objs/rabbit_a.php</Command>
     <Passive>0</Passive>
     <Durable>1</Durable>
+    <Exclusive>0</Exclusive>
     <AutoDelete>1</AutoDelete>
+    <Threads>1</Threads>
     <Enabled>1</Enabled>
   </Consumer>
 </Consumers>

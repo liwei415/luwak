@@ -1,6 +1,6 @@
 #include "lwk_rabbit.h"
 
-int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durable, int auto_delete)
+int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durable, int exclusive, int auto_delete)
 {
 
   int rst, status;
@@ -32,7 +32,7 @@ int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durabl
 
   // 务必保持 durable auto_delete passive C/S两端参数一致
   // amqp_queue_declare_ok_t *r = amqp_queue_declare(conn, 1, amqp_cstring_bytes(queue), 0, 1, 0, 1, amqp_empty_table);
-  amqp_queue_declare_ok_t *r = amqp_queue_declare(conn, 1, amqp_cstring_bytes(queue), passive, durable, 0, auto_delete, amqp_empty_table);
+  amqp_queue_declare_ok_t *r = amqp_queue_declare(conn, 1, amqp_cstring_bytes(queue), passive, durable, exclusive, auto_delete, amqp_empty_table);
 
   rst = r->message_count;
 

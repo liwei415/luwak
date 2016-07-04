@@ -12,6 +12,6 @@
 
 #include "lwk_common.h"
 
-int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durable, int auto_delete);
+int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durable, int exclusive, int auto_delete);
 
 #endif

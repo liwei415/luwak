@@ -33,13 +33,16 @@ typedef struct t_rabbit_s t_rabbit_t;
 struct t_rabbit_s
 {
   int num;
+  int tnum;
   char server[128];
   int port;
   char queue[128];
   char command[512];
   int passive;
   int durable;
+  int exclusive;
   int auto_delete;
+  int threads;
   int enabled;
 };
 

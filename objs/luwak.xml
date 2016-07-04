@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Consumers>
-  <Log>7</Log>
+<Luwak>
+  <IsDaemon>0</IsDaemon>
+  <LogLevel>7</LogLevel>
   <LogPath>lwk.log</LogPath>
-</Consumers>
+</Luwak>
