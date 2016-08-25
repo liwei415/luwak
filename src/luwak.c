@@ -58,6 +58,15 @@ void *_t_rabbit(void *t_rabbit)
 
   int port = ((t_rabbit_t *)t_rabbit)->port;
 
+  char username[128];
+  lwk_strlcpy(username, ((t_rabbit_t *)t_rabbit)->username, 128);
+
+  char password[128];
+  lwk_strlcpy(password, ((t_rabbit_t *)t_rabbit)->password, 128);
+
+  char vhost[128];
+  lwk_strlcpy(vhost, ((t_rabbit_t *)t_rabbit)->vhost, 128);
+
   char queue[128];
   lwk_strlcpy(queue, ((t_rabbit_t *)t_rabbit)->queue, 128);
 
@@ -77,7 +86,7 @@ void *_t_rabbit(void *t_rabbit)
   LOG_PRINT(LOG_DEBUG, "RABBIT ready to work...num:%d", num);
 
   while(1) {
-    if (lwk_rabbit_llen(server, port, queue, passive, durable, exclusive, auto_delete) > 0) {
+    if (lwk_rabbit_llen(server, port, username, password, vhost, queue, passive, durable, exclusive, auto_delete) > 0) {
       //LOG_PRINT(LOG_DEBUG, "!!!!!!!!!!RABBIT:%s---->%d\n", queue, lwk_rabbit_llen(server, port, queue, passive, durable, exclusive, auto_delete));
       system(command);
     }
@@ -158,6 +167,9 @@ int main()
         t_rabbit->tnum = j;
         lwk_strlcpy(t_rabbit->server, (rabbit_consumers->consumer+i)->server, 128);
         t_rabbit->port = (rabbit_consumers->consumer+i)->port;
+        lwk_strlcpy(t_rabbit->username, (rabbit_consumers->consumer+i)->username, 128);
+        lwk_strlcpy(t_rabbit->password, (rabbit_consumers->consumer+i)->password, 128);
+        lwk_strlcpy(t_rabbit->vhost, (rabbit_consumers->consumer+i)->vhost, 128);
         lwk_strlcpy(t_rabbit->queue, (rabbit_consumers->consumer+i)->queue, 128);
         lwk_strlcpy(t_rabbit->command, (rabbit_consumers->consumer+i)->command, 512);
         t_rabbit->passive = (rabbit_consumers->consumer+i)->passive;

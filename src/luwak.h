@@ -36,6 +36,9 @@ struct t_rabbit_s
   int tnum;
   char server[128];
   int port;
+  char username[128];
+  char password[128];
+  char vhost[128];
   char queue[128];
   char command[512];
   int passive;

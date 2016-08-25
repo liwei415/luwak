@@ -1,6 +1,6 @@
 #include "lwk_rabbit.h"
 
-int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durable, int exclusive, int auto_delete)
+int lwk_rabbit_llen(char *server, int port, char *username, char *password, char *vhost, char *queue, int passive, int durable, int exclusive, int auto_delete)
 {
 
   int rst, status;
@@ -23,9 +23,14 @@ int lwk_rabbit_llen(char *server, int port, char *queue, int passive, int durabl
   }
 
   // login
-  arrt = amqp_login(conn, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "guest", "guest");
+  arrt = amqp_login(conn, vhost, 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, username, password);
+  //arrt = amqp_login(conn, "/test", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "liwei", "liwei");
   if (arrt.reply_type == AMQP_RESPONSE_LIBRARY_EXCEPTION) {
-    LOG_PRINT(LOG_DEBUG, "login failed\n");
+    LOG_PRINT(LOG_DEBUG, "login failed --- %s %s %s\n", username, password, vhost);
+
+    amqp_connection_close(conn, AMQP_REPLY_SUCCESS);
+    amqp_destroy_connection(conn);
+    return 0;
   }
   amqp_channel_open(conn, 1);
   amqp_get_rpc_reply(conn);

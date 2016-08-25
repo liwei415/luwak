@@ -163,6 +163,15 @@ lwk_rabbit_consumers_t *lwk_xml_load_rabbit(char *conf)
         else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Port"))) {
           (consumers->consumer+i)->port = atoi((char *)key);
         }
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Username"))) {
+          lwk_strlcpy((consumers->consumer+i)->username, (char *)key, 128);
+        }
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Password"))) {
+          lwk_strlcpy((consumers->consumer+i)->password, (char *)key, 128);
+        }
+        else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Vhost"))) {
+          lwk_strlcpy((consumers->consumer+i)->vhost, (char *)key, 128);
+        }
         else if ((!xmlStrcmp(cur_consumer_chd->name, (const xmlChar *)"Queue"))) {
           lwk_strlcpy((consumers->consumer+i)->queue, (char *)key, 128);
         }
