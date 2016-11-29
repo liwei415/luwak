@@ -157,7 +157,7 @@ int main()
     if ((rabbit_consumers->consumer+i)->enabled == 0) {
       continue;
     }
-    for (j = 0; j <= (rabbit_consumers->consumer+i)->threads; j++) {
+    for (j = 0; j < (rabbit_consumers->consumer+i)->threads; j++) {
       t_rabbit_t *t_rabbit = (t_rabbit_t *)calloc(1, sizeof(t_rabbit_t));
       if (t_rabbit == NULL) {
         LOG_PRINT(LOG_DEBUG, "create thread failed...");
