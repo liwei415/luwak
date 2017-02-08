@@ -1,5 +1,5 @@
 ## Overview
-OX is an image/file/video server, written by pure C.
+Luwak is a MQ monitor for php， written by pure C.
 
 ## Building
 * cd luwak
