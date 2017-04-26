@@ -38,6 +38,7 @@ void *_t_redis(void *t_redis)
   while(1) {
     if (lwk_redis_llen(server, port, key) > 0) {
       system(command);
+      continue;
     }
     usleep(U_SLEEP_TIME);
   }
@@ -89,6 +90,7 @@ void *_t_rabbit(void *t_rabbit)
     if (lwk_rabbit_llen(server, port, username, password, vhost, queue, passive, durable, exclusive, auto_delete) > 0) {
       //LOG_PRINT(LOG_DEBUG, "!!!!!!!!!!RABBIT:%s---->%d\n", queue, lwk_rabbit_llen(server, port, queue, passive, durable, exclusive, auto_delete));
       system(command);
+      continue;
     }
     usleep(U_SLEEP_TIME);
   }
